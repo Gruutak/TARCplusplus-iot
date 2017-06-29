@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./build && babel src --out-dir build --copy-files",
+    "dev": "DEV=true nodemon index.js",
     "dev-receiver": "DEV=true nodemon ReadDeviceToCloudMessages.js",
     "dev-device": "DEV=true nodemon SimulatedDevice.js",
+    "postinstall": "npm run build",
     "start-receiver": "node ReadDeviceToCloudMessages.js",
     "start-device": "node SimulatedDevice.js",
     "test": "npm run lint"
@@ -26,9 +28,15 @@
     "azure-iot-device": "^1.1.14",
     "azure-iot-device-mqtt": "^1.1.14",
     "azure-iothub": "^1.1.11",
-    "mraa": "^1.7.0"
+    "babel-preset-es2015-node6": "^0.4.0",
+    "babel-preset-stage-1": "^6.24.1",
+    "chalk": "^1.1.3",
+    "moment": "^2.18.1",
+    "mraa": "^1.7.0",
+    "nconf": "^0.8.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "eslint": "^3.19.0",
     "nodemon": "^1.11.0"
   },

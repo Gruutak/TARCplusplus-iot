@@ -1,0 +1,19 @@
+module.exports = {
+	// *Required* Hostname for the hub
+	HOSTNAME: '',
+
+	// *Optional* Shared access key for the device
+	DEVICE_ACCESS_KEY: '',
+
+	// *Required if DEVICE_ACCESS_KEY is set* Device id
+	DEVICE_ID: '',
+
+	// *Optional* Shared access key for the hub
+	HUB_ACCESS_KEY: '',
+
+	// *Required if HUB_ACCESS_KEY is set* Shared access key name
+	HUB_ACCESS_KEY_NAME: '',
+
+	// PORT used by express
+	PORT: 3000
+};
