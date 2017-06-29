@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rm -rf ./build && babel src --out-dir build --copy-files",
     "dev": "DEV=true nodemon index.js",
-    "dev-receiver": "DEV=true nodemon ReadDeviceToCloudMessages.js",
-    "dev-device": "DEV=true nodemon SimulatedDevice.js",
+    "dev-receiver": "RECEIVER_MODE=true DEV=true nodemon index.js",
+    "dev-device": "DEVICE_MODE=true DEV=true nodemon index.js",
     "postinstall": "npm run build",
 	"start": "DEVICE_MODE=true node index.js",
     "start-receiver": "RECEIVER_MODE=true node index.js",

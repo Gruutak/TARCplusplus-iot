@@ -2,6 +2,7 @@
 import nconf from 'nconf';
 import { clientFromConnectionString } from 'azure-iot-device-mqtt';
 import { Message } from 'azure-iot-device';
+import logger from './logger';
 
 export class Device {
 	constructor() {
@@ -12,8 +13,8 @@ export class Device {
 
 	printResultFor(op) {
 		return function printResult(err, res) {
-			if (err) console.log(`${op} error: ${err.toString()}`);
-			if (res) console.log(`${op} status: ${res.constructor.name}`);
+			if (err) logger.error(`${op} error: ${err.toString()}`);
+			if (res) logger.warn(`${op} status: ${res.constructor.name}`);
 		};
 	}
 
@@ -21,9 +22,9 @@ export class Device {
 		let client = this.client;
 		client.open(err => {
 			if (err) {
-				console.log(`Could not connect: ${err}`);
+				logger.error(`Could not connect: ${err}`);
 			} else {
-				console.log(`Client connected`);
+				logger.info(`Client connected`);
 
 			    // Create a message and send it to the IoT Hub every second
 			    setInterval(() => {
@@ -32,7 +33,7 @@ export class Device {
 			        var data = JSON.stringify({ deviceId: 'myFirstNodeDevice', temperature: temperature, humidity: humidity });
 			        var message = new Message(data);
 			        message.properties.add('temperatureAlert', (temperature > 30) ? 'true' : 'false');
-			        console.log(`Sending message: ${message.getData()}`);
+			        logger.warn(`Sending message: ${message.getData()}`);
 			        client.sendEvent(message, this.printResultFor('send'));
 			    }, 1000);
 		  	}
