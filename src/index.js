@@ -1,8 +1,10 @@
 import './setup-config';
-import {Receiver} from './Receiver';
-import { openClient as runDevice } from './Device';
+import { Receiver } from './Receiver';
+import { Device } from './Device';
 
 
-let receiver = new Receiver();
-receiver.run();
-// runDevice();
+// let receiver = new Receiver();
+// receiver.run();
+
+let device = new Device();
+device.run();
