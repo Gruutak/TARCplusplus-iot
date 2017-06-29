@@ -9,8 +9,9 @@
     "dev-receiver": "DEV=true nodemon ReadDeviceToCloudMessages.js",
     "dev-device": "DEV=true nodemon SimulatedDevice.js",
     "postinstall": "npm run build",
-    "start-receiver": "node ReadDeviceToCloudMessages.js",
-    "start-device": "node SimulatedDevice.js",
+	"start": "DEVICE_MODE=true node index.js",
+    "start-receiver": "RECEIVER_MODE=true node index.js",
+    "start-device": "DEVICE_MODE=true node index.js",
     "test": "npm run lint"
   },
   "repository": {
