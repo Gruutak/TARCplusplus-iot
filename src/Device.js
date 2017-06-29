@@ -14,7 +14,7 @@ export class Device {
 	printResultFor(op) {
 		return function printResult(err, res) {
 			if (err) logger.error(`${op} error: ${err.toString()}`);
-			if (res) logger.warn(`${op} status: ${res.constructor.name}`);
+			//if (res) logger.warn(`${op} status: ${res.constructor.name}`);
 		};
 	}
 
@@ -30,7 +30,7 @@ export class Device {
 			    setInterval(() => {
 			        var temperature = 20 + (Math.random() * 15);
 			        var humidity = 60 + (Math.random() * 20);
-			        var data = JSON.stringify({ deviceId: 'myFirstNodeDevice', temperature: temperature, humidity: humidity });
+			        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
 			        var message = new Message(data);
 			        message.properties.add('temperatureAlert', (temperature > 30) ? 'true' : 'false');
 			        logger.warn(`Sending message: ${message.getData()}`);
