@@ -1,6 +1,6 @@
 'use strict';
 import nconf from 'nconf';
-import {Client as EventHubClient} from 'azure-event-hubs';
+import { Client as EventHubClient } from 'azure-event-hubs';
 
 export class Receiver {
 	constructor() {
