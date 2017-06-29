@@ -1,6 +1,7 @@
 'use strict';
 import nconf from 'nconf';
 import { Client as EventHubClient } from 'azure-event-hubs';
+import logger from './logger';
 
 export class Receiver {
 	constructor() {
@@ -10,13 +11,11 @@ export class Receiver {
 	}
 
 	printError(err) {
-		console.log(err.message);
+		logger.error(err.message);
 	}
 
 	printMessage(message) {
-		console.log('Message received: ');
-		console.log(JSON.stringify(message.body));
-		console.log('');
+		logger.warn(`Message received: ${JSON.stringify(message.body)}`);
 	}
 
 	run() {
@@ -27,7 +26,7 @@ export class Receiver {
 	    .then(function (partitionIds) {
 	        return partitionIds.map(function (partitionId) {
 	            return client.createReceiver('$Default', partitionId, { 'startAfterTime' : Date.now()}).then(function(receiver) {
-	                console.log(`Created partition receiver: ${partitionId}`)
+	                logger.info(`Created partition receiver: ${partitionId}`)
 	                receiver.on('errorReceived', that.printError);
 	                receiver.on('message', that.printMessage);
 	            });
