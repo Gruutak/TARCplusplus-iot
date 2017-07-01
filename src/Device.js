@@ -3,6 +3,7 @@ import nconf from 'nconf';
 import { clientFromConnectionString } from 'azure-iot-device-mqtt';
 import { Message } from 'azure-iot-device';
 import logger from './logger';
+import mraa from 'mraa';
 
 export class Device {
 	constructor() {
@@ -19,6 +20,22 @@ export class Device {
 	}
 
 	run() {
+		console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the console
+		
+		let touchSensor = new mraa.Gpio(25); //setup digital read on pin 25
+		touchSensor.dir(mraa.DIR_IN); //set the gpio direction to input
+		
+		let led = new mraa.Gpio(23); //setup digital read on pin 23
+		led.dir(mraa.DIR_OUT);
+
+		function periodicActivity() {
+    			let touch_value = touchSensor.read(); //read the digital value of the pin
+			led.write(touch_value);
+		}
+
+		setInterval(periodicActivity, 1); //call the indicated function every 0.001 second (1000 milliseconds)
+		
+		/*
 		let client = this.client;
 		client.open(err => {
 			if (err) {
@@ -38,5 +55,6 @@ export class Device {
 			    }, 1000);
 		  	}
 		});
+		*/
 	}
 }
