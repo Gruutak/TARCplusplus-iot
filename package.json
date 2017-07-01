@@ -9,7 +9,7 @@
     "dev-receiver": "RECEIVER_MODE=true DEV=true nodemon index.js",
     "dev-device": "DEVICE_MODE=true DEV=true nodemon index.js",
     "postinstall": "npm run build",
-	"start": "RECEIVER_MODE=true node index.js",
+    "start": "RECEIVER_MODE=true node index.js",
     "start-receiver": "RECEIVER_MODE=true node index.js",
     "start-device": "DEVICE_MODE=true node index.js",
     "test": "npm run lint"
@@ -33,7 +33,8 @@
     "babel-preset-stage-1": "^6.24.1",
     "chalk": "^1.1.3",
     "moment": "^2.18.1",
-    "nconf": "^0.8.4"
+    "nconf": "^0.8.4",
+    "spi": "^0.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
