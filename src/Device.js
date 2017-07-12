@@ -4,7 +4,6 @@ import { clientFromConnectionString } from 'azure-iot-device-mqtt';
 import { Message } from 'azure-iot-device';
 import logger from './logger';
 import mraa from 'mraa';
-import SPI from 'spi';
 
 /*
 	PINS for mraa:
@@ -20,20 +19,16 @@ export class Device {
 	constructor() {
 		const connectionString = `HostName=${nconf.get('HOSTNAME')};DeviceId=${nconf.get('DEVICE_ID')};SharedAccessKey=${nconf.get('DEVICE_ACCESS_KEY')}`;
 
-		this.spi = new SPI.Spi('/dev/spidev0.0', {'mode': SPI.MODE['MODE_0']});
-		this.spi.maxSpeed(10000);
-		this.spi.open();
-
 		this.client = clientFromConnectionString(connectionString);
 
-		//do something when app is closing
-		process.on('exit', this.exitHandler);
-
-		//catches ctrl+c event
-		process.on('SIGINT', this.exitHandler);
-
-		//catches uncaught exceptions
-		process.on('uncaughtException', this.exitHandler);
+		// //do something when app is closing
+		// process.on('exit', this.exitHandler);
+		//
+		// //catches ctrl+c event
+		// process.on('SIGINT', this.exitHandler);
+		//
+		// //catches uncaught exceptions
+		// process.on('uncaughtException', this.exitHandler);
 	}
 
 	printResultFor(op) {
@@ -43,25 +38,26 @@ export class Device {
 		};
 	}
 
-	exitHandler() {
-		this.spi.close();
-
-		process.exit();
-	}
+	// exitHandler() {
+	// 	this.spi.close();
+	//
+	// 	process.exit();
+	// }
 
 	run() {
 		// Working with SPI for analog sensors
-		let temperature_buffer = new Buffer([0x01, 0x80, 0x00]);
+		console.log(`Iniciando leitura`);
+		let spiTemp = new mraa.Spi(0);
+		let temperature_buffer = new Buffer(3);
+		temperature_buffer[0] = 0x01;
+		temperature_buffer[1] = 0xA0;
+		temperature_buffer[2] = 0x00;
+
 
 		setInterval(() => {
-			this.spi.read(temperature_buffer, (device, buf) => {
-				var s = "";
-
-				for (var i=0; i < buf.length; i++)
-			      s = s + buf[i] + " ";
-			    console.log(s);
-			});
-		}, 5000)
+			let buf2 = spiTemp.write(temperature_buffer);
+			console.log("Sent: " + temperature_buffer.toString('hex') + ". Received: " + buf2.toString('hex'));
+		}, 1000)
 
 		// Working with MRAA and digital sensors
 		// console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the console
