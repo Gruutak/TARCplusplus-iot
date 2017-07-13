@@ -51,14 +51,14 @@ export class Device {
 					}
 					else {
 						let parsed_json = JSON.parse(py_data);
-
-						// Create a message and send it to the IoT Hub every second
-				        var temperature = data[`Temperatura`];
-				        var luminosity = data[`Luminosidade`];
-				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
-				        var message = new Message(data);
-				        logger.warn(`Sending message: ${message.getData()}`);
-				        client.sendEvent(message, this.printResultFor('send'));
+						console.log(parsed_json);
+						// // Create a message and send it to the IoT Hub every second
+				        // var temperature = data[`Temperatura`];
+				        // var luminosity = data[`Luminosidade`];
+				        // var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
+				        // var message = new Message(data);
+				        // logger.warn(`Sending message: ${message.getData()}`);
+				        // client.sendEvent(message, this.printResultFor('send'));
 					}
 				});
 
