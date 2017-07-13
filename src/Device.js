@@ -42,7 +42,7 @@ export class Device {
 
 				py.stdout.on(`data`, py_data => {
 					console.log(py_data);
-					if(py_data == `tilt`) {
+					if(str(py_data) == `tilt`) {
 						var message = new Message();
 						message.properties.add('earthquakeAlert', true);
 				        logger.warn(`Sending message: ${message.getData()}`);
