@@ -22,22 +22,21 @@ from time import sleep
 
 tilt = Tilt('GPIO-C')
 
-
 def read_Tilt():
 	global tilt
-	msg = Msg()
 	while True:
 		tilt.wait_for_tilt()
-		msg.print_tilt()
+		msg_tilt = Msg(tilt=True)
+		msg_tilt.print_msg()
+		sleep(0.001)
 
 class Msg(object):
-	def __init__ (self, temp='', lum=''):
+	def __init__ (self, temp=0, lum=0, tilt=False):
 		self.Temperatura = temp
 		self.Luminosidade = lum
-	def print_tilt (self):
-		print(json.dumps(1))
+		self.Tilt = tilt
 	def print_msg(self):
-		print(json.dumps(msg.__dict__))
+		print(json.dumps(self.__dict__))
 
 
 spi = spidev.SpiDev()
