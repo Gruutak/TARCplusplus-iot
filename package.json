@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./build && babel src --out-dir build --copy-files",
-    "dev": "DEV=true sudo -E nodemon index.js",
-    "dev-receiver": "RECEIVER_MODE=true DEV=true sudo nodemon index.js",
-    "dev-device": "DEVICE_MODE=true DEV=true sudo nodemon index.js",
+    "dev": "DEV=true nodemon index.js",
+    "dev-receiver": "RECEIVER_MODE=true DEV=true nodemon index.js",
+    "dev-device": "DEVICE_MODE=true DEV=true nodemon index.js",
     "postinstall": "npm run build",
-    "start": "RECEIVER_MODE=true sudo node index.js",
-    "start-receiver": "RECEIVER_MODE=true sudo node index.js",
-    "start-device": "DEVICE_MODE=true sudo node index.js",
+    "start": "RECEIVER_MODE=true node index.js",
+    "start-receiver": "RECEIVER_MODE=true node index.js",
+    "start-device": "DEVICE_MODE=true node index.js",
     "test": "npm run lint"
   },
   "repository": {
