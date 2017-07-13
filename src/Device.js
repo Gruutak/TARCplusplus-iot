@@ -51,8 +51,6 @@ export class Device {
 				        client.sendEvent(message, this.printResultFor('send'));
 					}
 					else {
-
-
 						// Create a message and send it to the IoT Hub every second
 				        var temperature = parsed_data.Temperatura;
 				        var luminosity = parsed_data.Luminosidade;

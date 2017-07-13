@@ -28,7 +28,7 @@ def read_Tilt():
 		tilt.wait_for_tilt()
 		msg_tilt = Msg(tilt=True)
 		msg_tilt.print_msg()
-		sleep(0.001)
+		sleep(1)
 
 class Msg(object):
 	def __init__ (self, temp=0, lum=0, tilt=False):
