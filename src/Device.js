@@ -3,7 +3,8 @@ import nconf from 'nconf';
 import { clientFromConnectionString } from 'azure-iot-device-mqtt';
 import { Message } from 'azure-iot-device';
 import logger from './logger';
-import spawn from 'child_proccess';
+
+var spawn = require('child_process').spawn;
 
 /*
 	PINS for mraa:
@@ -32,7 +33,7 @@ export class Device {
 	run() {
 		logger.info(`Iniciando leitura`);
 
-		py = spawn(`sudo python3`, [`sensors.py`]);
+		py = spawn(`sudo python3`, [`-u`, `sensors.py`]);
 
 		py.stdout.on(`data`, data => {
 			logger.warn(data);
