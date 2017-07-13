@@ -55,7 +55,7 @@ export class Device {
 						// Create a message and send it to the IoT Hub every second
 				        var temperature = parsed_json.Temperatura;
 				        var luminosity = parsed_json.Luminosidade;
-				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
+				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, luminosity: luminosity });
 				        var message = new Message(data);
 				        logger.warn(`Sending message: ${message.getData()}`);
 				        client.sendEvent(message, this.printResultFor('send'));
