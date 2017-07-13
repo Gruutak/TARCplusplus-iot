@@ -9,9 +9,9 @@
     "dev-receiver": "RECEIVER_MODE=true DEV=true nodemon index.js",
     "dev-device": "DEVICE_MODE=true DEV=true nodemon index.js",
     "postinstall": "npm run build",
-    "start": "RECEIVER_MODE=true node index.js",
-    "start-receiver": "RECEIVER_MODE=true node index.js",
-    "start-device": "DEVICE_MODE=true node index.js",
+    "start": "RECEIVER_MODE=true sudo -E node index.js",
+    "start-receiver": "RECEIVER_MODE=true sudo -E node index.js",
+    "start-device": "DEVICE_MODE=true sudo -E node index.js",
     "test": "npm run lint"
   },
   "repository": {
