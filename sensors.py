@@ -45,8 +45,8 @@ spi.open(0,0)
 spi.max_speed_hz=10000
 spi.mode = 0b00
 spi.bits_per_word = 8
-channel_select_temperatura=[0x01, 0x80, 0x00] #ADC2
-channel_select_luminosidade=[0x01, 0xA0, 0x00] #ADC1
+channel_select_temperatura=[0x01, 0x80, 0x00] #ADC1
+channel_select_luminosidade=[0x01, 0xA0, 0x00] #ADC2
 timer = 0
 
 
@@ -54,7 +54,7 @@ if __name__=='__main__':
 	_thread.start_new_thread(read_Tilt, ())
 	gpio_cs = gpio.GPIO(18, gpio.DIRECTION_OUTPUT)
 	with gpio.request_gpios([gpio_cs]):
-		while timer < 120:
+		while True:
 			gpio_cs.set_high()
 			sleep(0.00001)
 			gpio_cs.set_low()
@@ -82,5 +82,3 @@ if __name__=='__main__':
 			msg.print_msg()
 
 			sleep(5)
-			timer = timer + 5
-		connection.close()

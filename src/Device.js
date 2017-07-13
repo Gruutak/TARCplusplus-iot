@@ -33,18 +33,6 @@ export class Device {
 	run() {
 		logger.info(`Iniciando leitura`);
 
-		let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
-
-		py.stdout.on(`data`, data => {
-			logger.warn(data);
-		});
-
-		py.stderr.on('data', function (data) {
-			logger.error('stderr: ' + data);
-		});
-
-
-		/*
 		let client = this.client;
 		client.open(err => {
 			if (err) {
@@ -52,18 +40,32 @@ export class Device {
 			} else {
 				logger.info(`Client connected`);
 
-			    // Create a message and send it to the IoT Hub every second
-			    setInterval(() => {
-			        var temperature = 20 + (Math.random() * 15);
-			        var humidity = 60 + (Math.random() * 20);
-			        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
-			        var message = new Message(data);
-			        message.properties.add('temperatureAlert', (temperature > 30) ? 'true' : 'false');
-			        logger.warn(`Sending message: ${message.getData()}`);
-			        client.sendEvent(message, this.printResultFor('send'));
-			    }, 1000);
+				let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
+
+				py.stdout.on(`data`, py_data => {
+					if(py_data == `tilt`) {
+						var message = new Message();
+						message.properties.add('earthquakeAlert', true);
+				        logger.warn(`Sending message: ${message.getData()}`);
+				        client.sendEvent(message, this.printResultFor('send'));
+					}
+					else {
+						let parsed_json = JSON.parse(py_data);
+
+						// Create a message and send it to the IoT Hub every second
+				        var temperature = data[`Temperatura`];
+				        var luminosity = data[`Luminosidade`];
+				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, humidity: humidity });
+				        var message = new Message(data);
+				        logger.warn(`Sending message: ${message.getData()}`);
+				        client.sendEvent(message, this.printResultFor('send'));
+					}
+				});
+
+				py.stderr.on('data', data => logger.error('stderr: ' + data));
+
+
 		  	}
 		});
-		*/
 	}
 }
