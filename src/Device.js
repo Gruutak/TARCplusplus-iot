@@ -41,24 +41,25 @@ export class Device {
 				let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
 
 				py.stdout.on(`data`, py_data => {
-					var buff = new Buffer(py_data);
-    				console.log("foo: " + buff.toString('utf8'));
-					if(buff.toString('utf8') == `tilt`) {
-						var message = new Message();
+					let parsed_data = JSON.parse(py_data);
+					if(parsed_data.Tilt) {
+						var tilt = parsed_data.Tilt;
+						var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), tilt: tilt });
+						var message = new Message(data);
 						message.properties.add('earthquakeAlert', true);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        // client.sendEvent(message, this.printResultFor('send'));
+				        client.sendEvent(message, this.printResultFor('send'));
 					}
 					else {
-						let parsed_json = JSON.parse(py_data);
+
 
 						// Create a message and send it to the IoT Hub every second
-				        var temperature = parsed_json.Temperatura;
-				        var luminosity = parsed_json.Luminosidade;
+				        var temperature = parsed_data.Temperatura;
+				        var luminosity = parsed_data.Luminosidade;
 				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, luminosity: luminosity });
 				        var message = new Message(data);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        // client.sendEvent(message, this.printResultFor('send'));
+				        client.sendEvent(message, this.printResultFor('send'));
 					}
 				});
 
