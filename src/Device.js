@@ -43,8 +43,7 @@ export class Device {
 				py.stdout.on(`data`, py_data => {
 					var buff = new Buffer(py_data);
     				console.log("foo: " + buff.toString('utf8'));
-					console.log(buff.toString('utf8'));
-					if(py_data.decode() == `tilt`) {
+					if(buff.toString('utf8') == `tilt`) {
 						var message = new Message();
 						message.properties.add('earthquakeAlert', true);
 				        logger.warn(`Sending message: ${message.getData()}`);
