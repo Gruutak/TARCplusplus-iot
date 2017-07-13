@@ -35,7 +35,7 @@ class Msg(object):
 		self.Temperatura = temp
 		self.Luminosidade = lum
 	def print_tilt (self):
-		print('tilt')
+		print(json.dumps(1))
 	def print_msg(self):
 		print(json.dumps(msg.__dict__))
 
