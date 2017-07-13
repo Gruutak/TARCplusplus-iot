@@ -15,5 +15,17 @@ module.exports = {
 	HUB_ACCESS_KEY_NAME: '',
 
 	// PORT used by express
-	PORT: 3000
+	PORT: 3000,
+
+	// Twitter key
+	TWITTER_CONSUMER_KEY: '',
+
+	// Twitter secret
+	TWITTER_CONSUMER_SECRET: '',
+
+	// Twitter Access Token Key
+	TWITTER_ACCESS_TOKEN_KEY: '',
+
+	// Twitter Access Token Secret
+	TWITTER_ACCESS_TOKEN_SECRET: ''
 };
