@@ -31,8 +31,6 @@ export class Device {
 	}
 
 	run() {
-		logger.info(`Iniciando leitura`);
-
 		let client = this.client;
 		client.open(err => {
 			if (err) {
@@ -43,22 +41,23 @@ export class Device {
 				let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
 
 				py.stdout.on(`data`, py_data => {
+					console.log(py_data);
 					if(py_data == `tilt`) {
 						var message = new Message();
 						message.properties.add('earthquakeAlert', true);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        client.sendEvent(message, this.printResultFor('send'));
+				        // client.sendEvent(message, this.printResultFor('send'));
 					}
 					else {
 						let parsed_json = JSON.parse(py_data);
-						console.log(parsed_json);
+
 						// Create a message and send it to the IoT Hub every second
 				        var temperature = parsed_json.Temperatura;
 				        var luminosity = parsed_json.Luminosidade;
 				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, luminosity: luminosity });
 				        var message = new Message(data);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        client.sendEvent(message, this.printResultFor('send'));
+				        // client.sendEvent(message, this.printResultFor('send'));
 					}
 				});
 
