@@ -39,7 +39,7 @@ export class Device {
 			logger.warn(data);
 		});
 
-		ls.stderr.on('data', function (data) {
+		py.stderr.on('data', function (data) {
 			logger.error('stderr: ' + data);
 		});
 
