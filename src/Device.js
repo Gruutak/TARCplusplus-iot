@@ -33,7 +33,7 @@ export class Device {
 	run() {
 		logger.info(`Iniciando leitura`);
 
-		let py = spawn(`sudo`, [`-E`, `python3`, `-u`, `sensors.py`]);
+		let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
 
 		py.stdout.on(`data`, data => {
 			logger.warn(data);
