@@ -35,13 +35,6 @@ export class Receiver {
   			});
   		});
 
-
-		var params = {screen_name: 'nodejs'};
-		this.twitter_client.get('statuses/user_timeline', params, function(error, tweets, response) {
-			if (!error) {
-				console.log(tweets);
-			}
-		});
 	}
 
 	printError(err) {
