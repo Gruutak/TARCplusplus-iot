@@ -16,14 +16,39 @@ export class Receiver {
 			access_token_key: nconf.get(`TWITTER_ACCESS_TOKEN_KEY`),
 			access_token_secret: nconf.get(`TWITTER_ACCESS_TOKEN_SECRET`)
 		});
+
+		this.tilt_warnings = 0;
+		this.tilt_warning_timer;
 	}
 
 	printError(err) {
 		logger.error(err.message);
 	}
 
-	printMessage(message) {
-		logger.warn(`Message received: ${JSON.stringify(message.body)}`);
+	handleMessage(message) {
+		//logger.warn(`Message received: ${JSON.stringify(message.body)}`);
+
+		const tilts_for_alert = 5;
+		const tilt_interval = 10000;
+
+		if(message.body.tilt == true) {
+			clearTimeout(this.tilt_warning_timer);
+			this.tilt_warnings++;
+
+			if(this.tilt_warnings >= tilts_for_alert) {
+				that.twitter_client.post(`statuses/update`, {status: `ALERTA: Terremoto!`}, function(error, tweet, response) {
+					if (!error) {
+						logger.info(`Tweet de alerta de terremoto enviado.`);
+					}
+				});
+
+				this.tilt_warnings = 0;
+			}
+
+			this.tilt_warning_timer = setTimeout(() => {
+				this.tilt_warnings = 0;
+			}, this.tilt_warning_timer);
+		}
 	}
 
 	run() {
@@ -101,7 +126,7 @@ export class Receiver {
 	            return client.createReceiver(`$Default`, partitionId, { 'startAfterTime' : Date.now()}).then(function(receiver) {
 	                logger.info(`Created partition receiver: ${partitionId}`)
 	                receiver.on(`errorReceived`, that.printError);
-	                receiver.on(`message`, that.printMessage);
+	                receiver.on(`message`, that.handleMessage);
 	            });
 	        });
 	    })
