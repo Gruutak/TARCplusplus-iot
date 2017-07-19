@@ -17,15 +17,24 @@ export class Receiver {
 			access_token_secret: nconf.get('TWITTER_ACCESS_TOKEN_SECRET')
 		});
 
-		/*this.twitter_client.stream('statuses/filter', {track: 'EnchenteSorocaba'}, function(stream) {
-			stream.on('data', function(event) {
-				console.log(event && event.text);
-			});
- 
- 			stream.on('error', function(error) {
- 				throw error;
- 			});
- 		});*/
+		this.twitter_client.stream('statuses/filter', {track: 'EnchenteSorocaba'}, function(stream) {
+  			stream.on('data', function(event) {
+  				console.log(event && event.text);
+  			});
+   			stream.on('error', function(error) {
+  				throw error;
+  			});
+  		});
+
+  		this.twitter_client.stream('statuses/filter', {track: 'TerremotoSorocaba'}, function(stream) {
+  			stream.on('data', function(event) {
+  				console.log(event && event.text);
+  			});
+   			stream.on('error', function(error) {
+  				throw error;
+  			});
+  		});
+
 
 		var params = {screen_name: 'nodejs'};
 		this.twitter_client.get('statuses/user_timeline', params, function(error, tweets, response) {
