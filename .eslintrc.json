@@ -74,7 +74,10 @@
         "id-blacklist": "error",
         "id-length": "error",
         "id-match": "error",
-        "indent": "off",
+        "indent": [
+            "error",
+            "tab"
+        ],
         "init-declarations": "off",
         "jsx-quotes": "error",
         "key-spacing": "off",
@@ -228,7 +231,10 @@
         "require-await": "error",
         "require-jsdoc": "error",
         "rest-spread-spacing": "error",
-        "semi": "off",
+        "semi": [
+            "error",
+            "always"
+        ],
         "semi-spacing": "error",
         "sort-imports": "off",
         "sort-keys": "off",
