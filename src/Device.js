@@ -1,10 +1,10 @@
-'use strict';
+`use strict`;
 import nconf from 'nconf';
 import { clientFromConnectionString } from 'azure-iot-device-mqtt';
 import { Message } from 'azure-iot-device';
 import logger from './logger';
 
-var spawn = require('child_process').spawn;
+var spawn = require(`child_process`).spawn;
 
 /*
 	PINS for mraa:
@@ -18,7 +18,7 @@ var spawn = require('child_process').spawn;
 
 export class Device {
 	constructor() {
-		const connectionString = `HostName=${nconf.get('HOSTNAME')};DeviceId=${nconf.get('DEVICE_ID')};SharedAccessKey=${nconf.get('DEVICE_ACCESS_KEY')}`;
+		const connectionString = `HostName=${nconf.get(`HOSTNAME`)};DeviceId=${nconf.get(`DEVICE_ID`)};SharedAccessKey=${nconf.get(`DEVICE_ACCESS_KEY`)}`;
 
 		this.client = clientFromConnectionString(connectionString);
 	}
@@ -26,7 +26,6 @@ export class Device {
 	printResultFor(op) {
 		return function printResult(err, res) {
 			if (err) logger.error(`${op} error: ${err.toString()}`);
-			//if (res) logger.warn(`${op} status: ${res.constructor.name}`);
 		};
 	}
 
@@ -44,26 +43,24 @@ export class Device {
 					let parsed_data = JSON.parse(py_data);
 					if(parsed_data.Tilt) {
 						var tilt = parsed_data.Tilt;
-						var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), tilt: tilt });
+						var data = JSON.stringify({ deviceId: nconf.get(`DEVICE_ID`), tilt: tilt });
 						var message = new Message(data);
-						message.properties.add('earthquakeAlert', true);
+						message.properties.add(`earthquakeAlert`, true);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        client.sendEvent(message, this.printResultFor('send'));
+		        		client.sendEvent(message, this.printResultFor(`send`));
 					}
 					else {
 						// Create a message and send it to the IoT Hub every second
 				        var temperature = parsed_data.Temperatura;
 				        var luminosity = parsed_data.Luminosidade;
-				        var data = JSON.stringify({ deviceId: nconf.get('DEVICE_ID'), temperature: temperature, luminosity: luminosity });
+		        		var data = JSON.stringify({ deviceId: nconf.get(`DEVICE_ID`), temperature: temperature, luminosity: luminosity });
 				        var message = new Message(data);
 				        logger.warn(`Sending message: ${message.getData()}`);
-				        client.sendEvent(message, this.printResultFor('send'));
+		        		client.sendEvent(message, this.printResultFor(`send`));
 					}
 				});
 
-				py.stderr.on('data', data => logger.error('stderr: ' + data));
-
-
+				py.stderr.on(`data`, data => logger.error(`stderr: ${data}`));
 		  	}
 		});
 	}
