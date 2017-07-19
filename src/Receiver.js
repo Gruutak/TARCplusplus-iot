@@ -16,25 +16,6 @@ export class Receiver {
 			access_token_key: nconf.get('TWITTER_ACCESS_TOKEN_KEY'),
 			access_token_secret: nconf.get('TWITTER_ACCESS_TOKEN_SECRET')
 		});
-
-		this.twitter_client.stream('statuses/filter', {track: 'EnchenteSorocaba'}, function(stream) {
-  			stream.on('data', function(event) {
-  				console.log(event && event.text);
-  			});
-   			stream.on('error', function(error) {
-  				throw error;
-  			});
-  		});
-
-  		this.twitter_client.stream('statuses/filter', {track: 'TerremotoSorocaba'}, function(stream) {
-  			stream.on('data', function(event) {
-  				console.log(event && event.text);
-  			});
-   			stream.on('error', function(error) {
-  				throw error;
-  			});
-  		});
-
 	}
 
 	printError(err) {
@@ -48,6 +29,49 @@ export class Receiver {
 	run() {
 		let that = this;
 		let client = this.client;
+
+		const tags_for_alert = 10;
+		const alert_interval = 3600000;
+
+		let warning_tags = 0;
+		let warning_timer;
+
+		this.twitter_client.stream('statuses/filter', {track: 'EnchenteSorocaba'}, function(stream) {
+  			stream.on('data', function(event) {
+				clearTimeout(warning_timer);
+
+				warning_tags++;
+				if(warning_tags >= tags_for_alert)
+					logger.warn("ENCHENTE.")
+
+				warning_timer = setTimeout(() => {
+					warning_tags = 0;
+				}, alert_interval);
+  			});
+
+   			stream.on('error', function(error) {
+  				throw error;
+  			});
+  		});
+
+  		this.twitter_client.stream('statuses/filter', {track: 'TerremotoSorocaba'}, function(stream) {
+  			stream.on('data', function(event) {
+				clearTimeout(warning_timer);
+
+				warning_tags++;
+				if(warning_tags >= tags_for_alert)
+					logger.warn("ENCHENTE.")
+
+				warning_timer = setTimeout(() => {
+					warning_tags = 0;
+				}, alert_interval);
+  			});
+			
+   			stream.on('error', function(error) {
+  				throw error;
+  			});
+  		});
+
 		client.open()
 		.then(client.getPartitionIds.bind(client))
 	    .then(function (partitionIds) {
