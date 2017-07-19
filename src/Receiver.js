@@ -30,25 +30,31 @@ export class Receiver {
 		let that = this;
 		let client = this.client;
 
-		const tags_for_alert = 10;
-		const alert_interval = 3600000;
+		const flood_tags_for_alert = 10;
+		const flood_alert_interval = 3600000;
 
-		let warning_tags = 0;
-		let warning_timer;
+		let flood_warning_tags = 0;
+		let flood_warning_timer;
+
+		const tremor_tags_for_alert = 10;
+		const tremor_alert_interval = 3600000;
+
+		let tremor_warning_tags = 0;
+		let tremor_warning_timer;
 
 		this.twitter_client.stream('statuses/filter', {track: 'EnchenteSorocaba'}, function(stream) {
   			stream.on('data', function(event) {
-				clearTimeout(warning_timer);
+				clearTimeout(flood_warning_timer);
 
-				warning_tags++;
-				if(warning_tags >= tags_for_alert) {
+				flood_warning_tags++;
+				if(flood_warning_tags >= flood_tags_for_alert) {
 					logger.warn("ENCHENTE.");
-					warning_tags = 0;
+					flood_warning_tags = 0;
 				}
 
-				warning_timer = setTimeout(() => {
-					warning_tags = 0;
-				}, alert_interval);
+				flood_warning_timer = setTimeout(() => {
+					flood_warning_tags = 0;
+				}, flood_alert_interval);
   			});
 
    			stream.on('error', function(error) {
@@ -58,17 +64,17 @@ export class Receiver {
 
   		this.twitter_client.stream('statuses/filter', {track: 'TerremotoSorocaba'}, function(stream) {
   			stream.on('data', function(event) {
-				clearTimeout(warning_timer);
+				clearTimeout(tremor_warning_timer);
 
-				warning_tags++;
-				if(warning_tags >= tags_for_alert) {
-					logger.warn("ENCHENTE.");
-					warning_tags = 0;
+				tremor_warning_tags++;
+				if(tremor_warning_tags >= tremor_tags_for_alert) {
+					logger.warn("TERREMOTO.");
+					tremor_warning_tags = 0;
 				}
 
-				warning_timer = setTimeout(() => {
-					warning_tags = 0;
-				}, alert_interval);
+				tremor_warning_timer = setTimeout(() => {
+					tremor_warning_tags = 0;
+				}, tremor_alert_interval);
   			});
 
    			stream.on('error', function(error) {
