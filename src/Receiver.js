@@ -50,7 +50,7 @@ export class Receiver {
 				if(flood_warning_tags >= flood_tags_for_alert) {
 					logger.warn("ENCHENTE.");
 
-					that.twitter_client.post('statuses/update', {status: 'ALERTA: Enchente!!'}, function(error, tweet, response) {
+					that.twitter_client.post('statuses/update', {status: 'ALERTA: Enchente!'}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de enchente enviado.`);
 						}
@@ -76,7 +76,7 @@ export class Receiver {
 				tremor_warning_tags++;
 				if(tremor_warning_tags >= tremor_tags_for_alert) {
 					logger.warn("TERREMOTO.");
-					that.twitter_client.post('statuses/update', {status: 'ALERTA: Terremoto!!'}, function(error, tweet, response) {
+					that.twitter_client.post('statuses/update', {status: 'ALERTA: Terremoto!'}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de terremoto enviado.`);
 						}
