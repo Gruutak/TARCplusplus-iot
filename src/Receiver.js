@@ -41,8 +41,10 @@ export class Receiver {
 				clearTimeout(warning_timer);
 
 				warning_tags++;
-				if(warning_tags >= tags_for_alert)
-					logger.warn("ENCHENTE.")
+				if(warning_tags >= tags_for_alert) {
+					logger.warn("ENCHENTE.");
+					warning_tags = 0;
+				}
 
 				warning_timer = setTimeout(() => {
 					warning_tags = 0;
@@ -59,14 +61,16 @@ export class Receiver {
 				clearTimeout(warning_timer);
 
 				warning_tags++;
-				if(warning_tags >= tags_for_alert)
-					logger.warn("ENCHENTE.")
+				if(warning_tags >= tags_for_alert) {
+					logger.warn("ENCHENTE.");
+					warning_tags = 0;
+				}
 
 				warning_timer = setTimeout(() => {
 					warning_tags = 0;
 				}, alert_interval);
   			});
-			
+
    			stream.on('error', function(error) {
   				throw error;
   			});

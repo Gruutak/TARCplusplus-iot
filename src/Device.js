@@ -38,7 +38,7 @@ export class Device {
 			} else {
 				logger.info(`Client connected`);
 
-				let py = spawn(`sudo`, [`python3`, `-u`, `sensors.py`]);
+				let py = spawn(`sudo`, [`python3`, `-u`, `./src/python/sensors.py`]);
 
 				py.stdout.on(`data`, py_data => {
 					let parsed_data = JSON.parse(py_data);
