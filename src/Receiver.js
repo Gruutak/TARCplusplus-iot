@@ -25,31 +25,8 @@ export class Receiver {
 		logger.error(err.message);
 	}
 
-	// handleMessage(message) {
-	// 	logger.warn(`Message received: ${JSON.stringify(message.body)}`);
 
-	// 	const tilts_for_alert = 1;
-	// 	const tilt_interval = 10000;
 
-	// 	if(message.body.tilt == true) {
-	// 		clearTimeout(this.tilt_warning_timer);
-	// 		this.tilt_warnings++;
-
-	// 		if(this.tilt_warnings >= tilts_for_alert) {
-	// 			this.twitter_client.post(`statuses/update`, {status: `ALERTA: Terremoto!!!`}, function(error, tweet, response) {
-	// 				if (!error) {
-	// 					logger.info(`Tweet de alerta de terremoto enviado.`);
-	// 				}
-	// 			});
-
-	// 			this.tilt_warnings = 0;
-	// 		}
-
-	// 		this.tilt_warning_timer = setTimeout(() => {
-	// 			this.tilt_warnings = 0;
-	// 		}, this.tilt_warning_timer);
-	// 	}
-	// }
 
 	run() {
 		let that = this;
