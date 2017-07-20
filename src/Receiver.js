@@ -16,27 +16,52 @@ export class Receiver {
 			access_token_key: nconf.get(`TWITTER_ACCESS_TOKEN_KEY`),
 			access_token_secret: nconf.get(`TWITTER_ACCESS_TOKEN_SECRET`)
 		});
+
+		this.tilt_warnings = 0;
+		this.tilt_warning_timer;
 	}
 
 	printError(err) {
 		logger.error(err.message);
 	}
 
-	printMessage(message) {
-		logger.warn(`Message received: ${JSON.stringify(message.body)}`);
-	}
+	// handleMessage(message) {
+	// 	logger.warn(`Message received: ${JSON.stringify(message.body)}`);
+
+	// 	const tilts_for_alert = 1;
+	// 	const tilt_interval = 10000;
+
+	// 	if(message.body.tilt == true) {
+	// 		clearTimeout(this.tilt_warning_timer);
+	// 		this.tilt_warnings++;
+
+	// 		if(this.tilt_warnings >= tilts_for_alert) {
+	// 			this.twitter_client.post(`statuses/update`, {status: `ALERTA: Terremoto!!!`}, function(error, tweet, response) {
+	// 				if (!error) {
+	// 					logger.info(`Tweet de alerta de terremoto enviado.`);
+	// 				}
+	// 			});
+
+	// 			this.tilt_warnings = 0;
+	// 		}
+
+	// 		this.tilt_warning_timer = setTimeout(() => {
+	// 			this.tilt_warnings = 0;
+	// 		}, this.tilt_warning_timer);
+	// 	}
+	// }
 
 	run() {
 		let that = this;
 		let client = this.client;
 
-		const flood_tags_for_alert = 10;
+		const flood_tags_for_alert = 2;
 		const flood_alert_interval = 3600000;
 
 		let flood_warning_tags = 0;
 		let flood_warning_timer;
 
-		const tremor_tags_for_alert = 10;
+		const tremor_tags_for_alert = 2;
 		const tremor_alert_interval = 3600000;
 
 		let tremor_warning_tags = 0;
@@ -50,7 +75,7 @@ export class Receiver {
 				if(flood_warning_tags >= flood_tags_for_alert) {
 					logger.warn(`ENCHENTE.`);
 
-					that.twitter_client.post(`statuses/update`, {status: `ALERTA: Enchente!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `ALERTA: Enchente em sorocaba!`}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de enchente enviado.`);
 						}
@@ -76,7 +101,7 @@ export class Receiver {
 				tremor_warning_tags++;
 				if(tremor_warning_tags >= tremor_tags_for_alert) {
 					logger.warn(`TERREMOTO.`);
-					that.twitter_client.post(`statuses/update`, {status: `ALERTA: Terremoto!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `ALERTA TWEET: Terremoto em Sorocaba!`}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de terremoto enviado.`);
 						}
@@ -101,7 +126,32 @@ export class Receiver {
 	            return client.createReceiver(`$Default`, partitionId, { 'startAfterTime' : Date.now()}).then(function(receiver) {
 	                logger.info(`Created partition receiver: ${partitionId}`)
 	                receiver.on(`errorReceived`, that.printError);
-	                receiver.on(`message`, that.printMessage);
+	                // receiver.on(`message`, that.handleMessage);
+	                receiver.on(`message`, (message) => {
+	                	logger.warn(`Message received: ${JSON.stringify(message.body)}`);
+
+						const tilts_for_alert = 1;
+						const tilt_interval = 10000;
+
+						if(message.body.tilt == true) {
+							clearTimeout(that.tilt_warning_timer);
+							that.tilt_warnings++;
+
+							if(that.tilt_warnings >= tilts_for_alert) {
+								that.twitter_client.post(`statuses/update`, {status: `ALERTA SENSOR: Terremoto em Sorocaba!`}, function(error, tweet, response) {
+									if (!error) {
+										logger.info(`Tweet de alerta de terremoto enviado.`);
+									}
+								});
+
+								that.tilt_warnings = 0;
+							}
+
+							that.tilt_warning_timer = setTimeout(() => {
+								that.tilt_warnings = 0;
+							}, that.tilt_warning_timer);
+						}
+	                });
 	            });
 	        });
 	    })
