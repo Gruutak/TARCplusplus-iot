@@ -3,6 +3,7 @@ import nconf from 'nconf';
 import { Client as EventHubClient } from 'azure-event-hubs';
 import logger from './logger';
 import Twitter from 'twitter';
+import moment from 'moment';
 
 export class Receiver {
 	constructor() {
@@ -24,8 +25,6 @@ export class Receiver {
 	printError(err) {
 		logger.error(err.message);
 	}
-
-
 
 
 	run() {
@@ -52,7 +51,7 @@ export class Receiver {
 				if(flood_warning_tags >= flood_tags_for_alert) {
 					logger.warn(`ENCHENTE.`);
 
-					that.twitter_client.post(`statuses/update`, {status: `ALERTA: Enchente em sorocaba!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA: Enchente em sorocaba!`}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de enchente enviado.`);
 						}
@@ -78,7 +77,7 @@ export class Receiver {
 				tremor_warning_tags++;
 				if(tremor_warning_tags >= tremor_tags_for_alert) {
 					logger.warn(`TERREMOTO.`);
-					that.twitter_client.post(`statuses/update`, {status: `ALERTA TWEET: Terremoto em Sorocaba!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA TWEET: Terremoto em Sorocaba!`}, function(error, tweet, response) {
 						if (!error) {
 							logger.info(`Tweet de alerta de terremoto enviado.`);
 						}
@@ -115,7 +114,7 @@ export class Receiver {
 							that.tilt_warnings++;
 
 							if(that.tilt_warnings >= tilts_for_alert) {
-								that.twitter_client.post(`statuses/update`, {status: `ALERTA SENSOR: Terremoto em Sorocaba!`}, function(error, tweet, response) {
+								that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA SENSOR: Terremoto em Sorocaba!`}, function(error, tweet, response) {
 									if (!error) {
 										logger.info(`Tweet de alerta de terremoto enviado.`);
 									}
