@@ -44,14 +44,14 @@ export class Receiver {
 		let tremor_warning_timer;
 
 		this.twitter_client.stream(`statuses/filter`, {track: `EnchenteSorocaba`}, function(stream) {
-  			stream.on(`data`, function(event) {
+			stream.on(`data`, () => {
 				clearTimeout(flood_warning_timer);
 
 				flood_warning_tags++;
 				if(flood_warning_tags >= flood_tags_for_alert) {
 					logger.warn(`ENCHENTE.`);
 
-					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA: Enchente em sorocaba!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA: Enchente em sorocaba!`}, error => {
 						if (!error) {
 							logger.info(`Tweet de alerta de enchente enviado.`);
 						}
@@ -63,21 +63,21 @@ export class Receiver {
 				flood_warning_timer = setTimeout(() => {
 					flood_warning_tags = 0;
 				}, flood_alert_interval);
-  			});
+			});
 
-   			stream.on(`error`, function(error) {
-  				throw error;
-  			});
-  		});
+			stream.on(`error`, function(error) {
+				throw error;
+			});
+		});
 
-  		this.twitter_client.stream(`statuses/filter`, {track: `TerremotoSorocaba`}, function(stream) {
-  			stream.on(`data`, function(event) {
+		this.twitter_client.stream(`statuses/filter`, {track: `TerremotoSorocaba`}, function(stream) {
+			stream.on(`data`, () => {
 				clearTimeout(tremor_warning_timer);
 
 				tremor_warning_tags++;
 				if(tremor_warning_tags >= tremor_tags_for_alert) {
 					logger.warn(`TERREMOTO.`);
-					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA TWEET: Terremoto em Sorocaba!`}, function(error, tweet, response) {
+					that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA TWEET: Terremoto em Sorocaba!`}, error => {
 						if (!error) {
 							logger.info(`Tweet de alerta de terremoto enviado.`);
 						}
@@ -88,33 +88,33 @@ export class Receiver {
 				tremor_warning_timer = setTimeout(() => {
 					tremor_warning_tags = 0;
 				}, tremor_alert_interval);
-  			});
+			});
 
-   			stream.on(`error`, function(error) {
-  				throw error;
-  			});
-  		});
+			stream.on(`error`, function(error) {
+				throw error;
+			});
+		});
 
 		client.open()
 		.then(client.getPartitionIds.bind(client))
-	    .then(function (partitionIds) {
-	        return partitionIds.map(function (partitionId) {
-	            return client.createReceiver(`$Default`, partitionId, { 'startAfterTime' : Date.now()}).then(function(receiver) {
-	                logger.info(`Created partition receiver: ${partitionId}`)
-	                receiver.on(`errorReceived`, that.printError);
-	                // receiver.on(`message`, that.handleMessage);
-	                receiver.on(`message`, (message) => {
-	                	logger.warn(`Message received: ${JSON.stringify(message.body)}`);
+		.then(function (partitionIds) {
+			return partitionIds.map(function (partitionId) {
+				return client.createReceiver(`$Default`, partitionId, { 'startAfterTime' : Date.now()}).then(function(receiver) {
+					logger.info(`Created partition receiver: ${partitionId}`);
+					receiver.on(`errorReceived`, that.printError);
+					// receiver.on(`message`, that.handleMessage);
+					receiver.on(`message`, message => {
+						logger.warn(`Message received: ${JSON.stringify(message.body)}`);
 
 						const tilts_for_alert = 1;
 						const tilt_interval = 10000;
 
-						if(message.body.tilt == true) {
+						if(message.body.tilt === true) {
 							clearTimeout(that.tilt_warning_timer);
 							that.tilt_warnings++;
 
 							if(that.tilt_warnings >= tilts_for_alert) {
-								that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA SENSOR: Terremoto em Sorocaba!`}, function(error, tweet, response) {
+								that.twitter_client.post(`statuses/update`, {status: `[${moment().format(`YYYY-MM-DD HH:mm:ss`)}] ALERTA SENSOR: Terremoto em Sorocaba!`}, error => {
 									if (!error) {
 										logger.info(`Tweet de alerta de terremoto enviado.`);
 									}
@@ -125,12 +125,12 @@ export class Receiver {
 
 							that.tilt_warning_timer = setTimeout(() => {
 								that.tilt_warnings = 0;
-							}, that.tilt_warning_timer);
+							}, tilt_interval);
 						}
-	                });
-	            });
-	        });
-	    })
-	    .catch(this.printError);
+					});
+				});
+			});
+		})
+		.catch(this.printError);
 	}
 }
